@@ -1,6 +1,6 @@
 resources:
   - frontend/deploy.yml
 images:
-  - name: 654654554686.dkr.ecr.us-east-1.amazonaws.com/devopsnanuvem/dev/front
+  - name: 132672257147.dkr.ecr.us-east-1.amazonaws.com/devopsnanuvem/dev/front
     newTag: v2.0
-    newName: 654654554686.dkr.ecr.us-east-1.amazonaws.com/devopsnanuvem/dev/front
+    newName: 132672257147.dkr.ecr.us-east-1.amazonaws.com/devopsnanuvem/dev/front
