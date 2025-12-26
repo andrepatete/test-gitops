@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: 132672257147.dkr.ecr.us-east-1.amazonaws.com/argoteste/dev/front:v4.0
+        image: 132672257147.dkr.ecr.us-east-1.amazonaws.com/argoteste/dev/front:v5.0
         ports:
         - containerPort: 80
       imagePullSecrets:
