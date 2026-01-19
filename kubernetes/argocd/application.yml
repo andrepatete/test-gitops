@@ -12,3 +12,18 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: default
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: webcolor
+  namespace: default
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/andrepatete/test-gitops.git
+    targetRevision: HEAD
+    path: ./kubernetes
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
