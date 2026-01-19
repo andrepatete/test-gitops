@@ -1,0 +1,90 @@
+# AnalysisTemplate para monitorar a taxa de sucesso da app webcolor
+# apiVersion: argoproj.io/v1alpha1
+# kind: AnalysisTemplate
+# metadata:
+#   name: webcolor-analysis-template
+# spec:
+#   metrics:
+#   - name: success-rate
+#     interval: 30s
+#     count: 4
+#     successCondition: result >= 0.9
+#     failureCondition: result < 0.8
+#     provider:
+#       prometheus:
+#         address: http://prometheus-server.default.svc.cluster.local
+#         query: |
+#           scalar(
+#             sum(rate(http_requests_total{app="webcolor",status=~"2.."}[2m]))
+#             /
+#             sum(rate(http_requests_total{app="webcolor"}[2m]))
+#           )
+
+# Rollout para a app webcolor com estratégia canary
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: webcolor-rollout
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: webcolor
+  template:
+    metadata:
+      labels:
+        app: webcolor
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "80"
+    spec:
+      containers:
+      - name: webcolor
+        image: fabricioveronez/web-color:blue
+        ports:
+        - containerPort: 80
+  strategy:
+    canary:
+      steps:
+      - setWeight: 25
+      - pause: {}
+      - setWeight: 50
+      - pause: {}
+      - setWeight: 75
+      - pause: {}
+      - setWeight: 100
+
+# Service para expor a app webcolor
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webcolor
+spec:
+  selector:
+    app: webcolor
+  ports:
+  - port: 80
+    targetPort: 80
+
+# Ingress para rotear o tráfego para a app webcolor
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webcolor-ingress-traefik
+  namespace: default
+spec:
+  ingressClassName: traefik
+  rules:
+    - host: webcolor.172.20.0.2.sslip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: webcolor
+                port:
+                  number: 80
