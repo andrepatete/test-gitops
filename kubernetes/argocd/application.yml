@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/andrepatete/test-gitops.git
     targetRevision: HEAD
-    path: ./kubernetes
+    path: ./kubernetes/frontend
   destination:
     server: https://kubernetes.default.svc
     namespace: default
@@ -23,7 +23,7 @@ spec:
   source:
     repoURL: https://github.com/andrepatete/test-gitops.git
     targetRevision: HEAD
-    path: ./kubernetes
+    path: ./kubernetes/webcolor
   destination:
     server: https://kubernetes.default.svc
     namespace: default
